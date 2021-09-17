@@ -1,0 +1,142 @@
+#!/bin/bash
+prog=$1
+
+studList="/home/sereneee/Desktop/OS/student.txt"
+echo " "
+echo "  Add New Students Form"
+echo -e "\e[1;34m ------------------------ \e[0m"
+
+validID=false
+while [ $validID = "false" ]
+
+do
+ echo -n " Student ID (00AAA00000):"; read studID
+ studID=$(echo $studID | tr "[[:lower:]]" "[[:upper:]]" ) 
+ 
+ if [ -z "$studID" ] || ! [[ $studID =~ ^[0-9][0-9][A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9][0-9]$ ]]
+ then
+  echo -e "\033[31;5m Invalid Student ID ! \033[0m"
+  echo " "
+  validID=false
+ else
+  if grep -q $studID $studList ; 
+  then
+    studentRecord=$(grep $studID $studList)
+    IFS=: read programmes IDS names dates hp addresses email <<< $studentRecord
+	echo -e "\033[31;5m Student ID existed ! \033[0m"
+ 	echo " "
+ 	echo -n " Please re-enter Student ID."
+ 	validID=false
+   else
+ 	validID=true
+   fi
+ fi
+done
+
+#------------------------------------------
+while [ "$studName" = "" ] || ! [[ $studName =~ [A-Za-z]{2,40} ]] ;
+do
+ echo -n " Student Name       	:" ; read studName
+ if [ -z "studName" ] || ! [[ $studName =~ [A-Za-z]{2,40} ]]
+ then
+   echo -e "\033[31;5m Invalid Student Name ! \033[0m"
+   echo " Please enter again."
+   echo " "
+ fi
+done
+
+#------------------------------------------
+
+minAge=$(date -d 2004-01-01 +"%Y%m%d")
+validDate=false
+while [ $validDate = "false" ] 
+do
+ echo -n " Birth Date (YYYY-MM-DD):"; read date
+ if ! [ -z $date ] 
+ then
+   if [ $(date -d "$date" +"%Y%m%d" 2>> /dev/null) ]
+    then
+     if [[ "$date" < "$minAge" ]]
+      then
+       validDate=true
+    else
+       echo -e "\033[31;5m Invalid Birth Date ! Age is too young ! \033[0m"
+       echo " Please enter again."
+       echo " "
+       validDate=false
+    fi
+   else
+    echo -e "\033[31;5m Invalid Birth Date ! \033[0m"
+       echo " Please enter again."
+       echo " "
+       validDate=false
+   fi
+ else 
+   echo -e "\033[31;5m Incomplete Birth Date ! \033[0m"
+   echo " Please enter again."
+   echo " "
+   validDate=false   
+ fi
+done
+
+
+#------------------------------------------
+while [ "$contactNum" = "" ] || ! [[ $contactNum =~ ^[0][1][0-9]-[0-9]{7,8}$ ]] ;
+do
+ echo -n " Contact Number     	:"; read contactNum
+ if [ -z "$contactNum" ] || ! [[ $contactNum =~ ^[0][1][0-9]-[0-9]{7,8}$ ]]
+ then
+   echo -e "\033[31;5m Invalid Contact Number ! \033[0m"
+   echo " Please enter again."
+   echo " "
+ fi
+done
+
+#------------------------------------------
+while [ -z "$mailAdd" ] || ! [[ $mailAdd =~ ^[[:graph:][:space:]]{10,40}$ ]]
+do
+ echo -n " Mailing Address    	:" ; read mailAdd
+ if [ -z "$mailAdd" ] || ! [[ $mailAdd =~ ^[[:graph:][:space:]]{10,40}$ ]]
+ then
+   echo -e "\033[31;5m Invalid Mailing Address ! \033[0m"
+   echo " Please enter again."
+   echo " "
+   #validMail=false
+ #else
+   #validMail=true
+ fi
+done
+
+#-----------------------------------------
+while [ -z "$email" ] || ! [[ "$email" =~ ^[[:alnum:]]{6,20}\@tarc.edu.my$ ]]
+do
+ echo -n " Email Address      	:"; read email
+ if [ -z "$email" ] || ! [[ "$email" =~ ^[[:alnum:]]{6,20}\@tarc.edu.my$ ]]
+ then
+   echo -e "\033[31;5m Invalid Email ! \033[0m"
+   echo " Please enter again."
+   echo " "
+ fi
+done
+
+#-----------------------------------------
+echo " Saving..."
+sleep 2
+echo "$prog:$studID:$studName:$date:$contactNum:$mailAdd:$email" >> student.txt
+
+#-----------------------------------------
+choice=n
+while [ "$choice" != "y" ] || [ "$choice" != "q" ]
+do
+ echo " "
+ echo -n  " Add Another Student? (y)es or (q)uit : "; read choice
+ echo " "
+ case "$choice" in
+ [Yy]) ./prog;
+   	exit;;
+ [Qq]) ./ManagementMenu;
+   	exit;;
+ *) echo -e "\033[31;5m Invalid Input ! \033[0m" 
+    echo " Please enter again." ;;
+ esac
+done

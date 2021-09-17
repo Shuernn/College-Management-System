@@ -1,0 +1,67 @@
+#!/bin/bash
+
+#Rmb to change  pathway
+
+stud_file="/home/shuern/Downloads/student.txt"
+
+#echo -e "\033[4m Search Student Details Form\033[0m"
+
+echo "  Search Student Details Form"
+echo -e "\e[1;36m ----------------------------- \e[0m"
+echo " "
+
+ validCode=f
+ while [ $validCode = "f" ]
+  do
+   echo -n " Enter Student ID [00AAA00000]: "; read studID
+   echo -e "\e[1;34m _____________________________________________________________________ \e[0m"
+   echo " "
+ 
+   studID=${studID^^} #Change to uppercase
+ 
+   
+   if [ -n $studID ] && [[ $studID =~ ^[0-9][0-9][A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9][0-9]$ ]]
+	then
+  	validCode=t
+   else
+ 	echo -e "\033[31;5m Invalid Student ID ! \033[0m"
+ 	echo " Please enter again."
+ 	echo " "
+ 	validCode=f
+   fi
+  done
+
+  result="$(grep -i "$studID" "$stud_file")"
+
+  while IFS=: read -r prog id name date contact mailAdd email
+   do
+	if [[ -n $prog && -n $id && -n $name && -n $date && $contact && -n $mailAdd && -n $email ]]
+ 	then
+ 	 
+   	printf '%-17s%-3s%-17s\n' " Student Name " ":" "$name"
+        printf '%-17s%-3s%-17s\n' " Birth Date " ":" "$date"
+        printf '%-17s%-3s%-17s\n' " Contact Number " ":" "$contact"
+        printf '%-17s%-3s%-17s\n' " Mailing Address " ":" "$mailAdd"
+        printf '%-17s%-3s%-17s\n' " Email " ":" "$email"
+   	echo " "
+
+	else
+  	#echo " This Student ID $studID does not exist !"
+  	echo -e " Student ID: \e[1;33m $studID \e[0m does not exist !"
+	fi
+  done <<< $result
+
+while [ "$choice" != "y" ] || [ "$choice" != "q" ]
+do
+ echo " "
+ echo " Search Another Student? (y)es or (q)uit : "   
+ echo -n  " Press (q) to return to College Management Menu " ; read choice
+ echo " "
+ case "$choice" in
+ [Yy]) ./searchStud;
+   	exit;;
+ [Qq]) ./ManagementMenu;
+   	exit;;
+ *) echo -e "\033[31;5m Invalid Input ! \033[0m" ;;
+ esac
+done

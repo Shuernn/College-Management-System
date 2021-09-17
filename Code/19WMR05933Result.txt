@@ -1,0 +1,35 @@
+ Student ID      :  19WMR05933       
+ Student Name    :  Lee Shu Ern      
+ Academic Year   :  2021             
+ Semester        :  1                
+ 
+ ======================================================================================================
+ Course Code:     Marks Obtained:        Grade Obtained:        Remarks:               Quality Point:        
+ =====================================================================================================
+ BACS1234         90                     A                      Execellent             16.00
+ BACS2093         70                     B+                     Good                   10.50
+                                                                Total Quality Point:   26.50
+ 
+ Student ID      :  19WMR05933       
+ Student Name    :  Lee Shu Ern      
+ Academic Year   :  2021             
+ Semester        :  2                
+ 
+ ======================================================================================================
+ Course Code:     Marks Obtained:        Grade Obtained:        Remarks:               Quality Point:        
+ =====================================================================================================
+ BACS2053         70                     B+                     Good                   10.50
+ BAIT3113         90                     A                      Execellent             12.00
+                                                                Total Quality Point:   22.50
+ 
+ Student ID      :  19WMR05933       
+ Student Name    :  Lee Shu Ern      
+ Academic Year   :  2021             
+ Semester        :  1                
+ 
+ ======================================================================================================
+ Course Code:     Marks Obtained:        Grade Obtained:        Remarks:               Quality Point:        
+ =====================================================================================================
+ BAIT2112         80                     A                      Execellent             8.00
+                                                                Total Quality Point:   8.00
+ 

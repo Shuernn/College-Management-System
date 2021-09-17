@@ -1,0 +1,207 @@
+#!/bin/bash
+
+# task4b
+# Input the academic year and semester
+# create the file and the details
+# Check the academic year and sem
+
+course_file="/home/shuern/Downloads/course.txt"
+stud_file="/home/shuern/Downloads/student.txt"
+
+new() 
+{
+  studID=$1
+  year=$2
+  sem=$3
+  course_file="/home/shuern/Downloads/course.txt"
+  stud_file="/home/shuern/Downloads/student.txt"       
+    
+  echo " " 
+   
+     #echo " StudentID: $studID" >> $studID"Result.txt"
+     printf '%-17s%-3s%-17s\n' " Student ID " ":" "$studID" >> $studID"Result.txt"
+     
+     result="$(echo $studID | grep -i "$studID" "$stud_file")"
+
+     while IFS=: read -r programme id name date contact mailAdd email   
+  	do
+         #echo " Student Name: $name" >> "$studID"Result.txt
+         printf '%-17s%-3s%-17s\n' " Student Name " ":" "$name" >> $studID"Result.txt"
+     done <<< $result 
+     
+     #echo " Academic Year: $year" >> "$studID"Result.txt
+     printf '%-17s%-3s%-17s\n' " Academic Year " ":" "$year" >> $studID"Result.txt"
+     
+     #echo " Semester: $sem" >> "$studID"Result.txt
+     printf '%-17s%-3s%-17s\n' " Semester " ":" "$sem" >> $studID"Result.txt"
+     
+     echo " " >> "$studID"Result.txt
+     
+     echo " ======================================================================================================"  >> $studID"Result.txt"
+     
+     printf '%-14s%-3s' " Course Code"":" >> $studID"Result.txt"
+     printf '%-20s%-3s' " Marks Obtained"":" >> $studID"Result.txt"
+     printf '%-20s%-3s' " Grade Obtained"":" >> $studID"Result.txt"
+     printf '%-20s%-3s' " Remarks"":" >>  $studID"Result.txt"
+     printf '%-20s%-3s\n' " Quality Point"":" >> $studID"Result.txt"
+     
+     echo " ====================================================================================================="  >> $studID"Result.txt"
+
+}
+
+next() {
+
+
+validInput=false
+while [ $validInput = "false" ]
+do 
+ echo " "
+ echo -n " You Want to add new course marks for this semester (y)es / (n)o?" ; read respond
+ echo " "
+ 
+ respond=$(echo $respond | tr "[[:lower:]]" "[[:upper:]]")
+ 
+ if [[ $respond =~ ^[YN]$ ]]
+ then 
+   validInput=true
+  else 
+   echo " "
+   echo -e "\033[31;5m Invalid Input ! \033[0m"  
+   echo " Please enter again."
+   echo " "   
+   validInput=false    
+
+  fi
+done
+
+}
+
+studID=$1
+echo "  Student Examination Marks Form"
+echo -e "\e[1;36m -------------------------------- \e[0m"
+
+
+continue=true # continue = true
+while [[ $continue = "true" ]]
+ do 
+  echo -n " Academic Year (YYYY): " ; read year
+
+  cyear=$(date +%Y) # Current Year
+  
+  if [[ $year = "" ]] 
+   then 
+    echo " "   
+    echo -e "\033[31;5m Invalid Year ! \033[0m"
+    echo " Please enter again."
+    echo " "
+    continue=true
+  else
+   if [[ $(date -d "$year" +"%Y" 2>>/dev/null) ]]
+   then 
+    if [ $year -ge 2020 -a $year -le $cyear ] # start from acedemic year 2020 and will keep on update the year
+     then 
+       continue=false
+    else
+     echo " "   
+     echo -e "\033[31;5m Invalid Year ! \033[0m"
+     echo " Please enter again."
+     echo " " 
+     continue=true        
+    fi   
+    else
+     echo " "   
+     echo -e "\033[31;5m Invalid Year ! \033[0m"
+     echo " Please enter again."    
+     echo " "
+     continue=true
+  fi
+   
+fi    
+  
+done   
+
+while ! [[ $sem =~ ^[1-3]$ ]]
+do 
+ echo -n " Semester (1 / 2 / 3 ): " ; read sem
+ 
+ if ! [[ $sem =~ ^[1-3]$ ]]
+  then
+    echo -e "\033[31;5m Invalid Input ! \033[0m"
+ fi
+done
+
+echo -e "\e[1;34m _____________________________________________________________________ \e[0m"
+echo " "
+
+
+#----------------------------------------------------------------------------
+
+
+
+if ! [ -f "$studID"Result.txt ] # if file does not exits
+    then 
+     touch $studID"Result.txt"     # Create a file for the new student
+else
+  if grep -q -i "$year" $studID"Result.txt" &&  grep -i -w -q "$sem" $studID"Result.txt"
+  then    
+    echo -e " The result for year \e[1;32m $year \e[0m sem \e[1;32m $sem \e[0m is existed."
+     
+    next
+    respond=$respond
+    
+   if [ $respond = "N" ]
+    then 
+      ./studV
+   else [ $respond = "Y" ]
+    validCode=false
+    while [ $validCode = false ]
+    do
+     echo -n " Please enter the course code for checking purpose: " ; read courseCode
+  
+     courseCode=$(echo $courseCode | tr "[[:lower:]]" "[[:upper:]]" )
+  
+      if  [ -z $courseCode ] || ! [[ $courseCode =~ ^BA[A-Z][A-Z][0-9][0-9][0-9][0-9]$ ]]
+      then 
+       echo " "
+       echo -e "\033[31;5m Invalid Course Code ! \033[0m"
+       echo " Please enter a valid Course Code."
+       echo " "
+       validCode=false 
+      else validCode=true  
+      fi 
+    done
+     
+      # Check for whether the course code exist
+      if grep -q -w  $courseCode $course_file 
+      then
+        #Check duplicate for 1 course
+        # If duplicate
+       if [ -f $studID"Result.txt" ] && grep -q $courseCode $studID"Result.txt"
+        then
+         echo " "
+         echo -e "\e[1;34m Mark is added for $courseCode \e[0m"  
+         echo -e "\033[31;5m Back to Student Validation... \033[0m"
+         sleep 1
+         echo " "
+         ./studV
+        fi    
+    else  # Code does not exist 
+     echo " "
+     echo -e "\033[31;5m Course Code does not exist ! \033[0m"
+     echo " "
+     ./studV
+    fi
+   fi
+ fi
+fi
+    
+
+echo " "
+echo " File Name: $studID"Result.txt" "
+ new "$studID" "$year" "$sem"
+  
+
+./task4c "$studID" "$year" "$sem" 
+
+
+

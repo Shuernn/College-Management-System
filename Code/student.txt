@@ -1,0 +1,5 @@
+ RIT ( Bachelor in Information Technology ):19WMR05920:Hee Sze Wei:2000-02-16:016-6918841:2170, Taman Permai 3, 70200 Seremban:szewei@tarc.edu.my
+ RST ( Bachelor in Interactive Software Technology ):20WRR05429:Yensan Pang:1998-05-05:012-2326583:1530, Jalan Kiara, 70100 Seremban:yensan55@tarc.edu.my
+ RSD ( Bachelor in Software Development ):19WMR05933:Lee Shu Ern:1999-09-01:018-9898878:541, Jalan Melati, 56100 Cheras:shuernn@tarc.edu.my
+ REI ( Bachelor in Enterprise Information System ):19WME02216:Hee Sze Suen:2001-11-01:010-2193212:2152, Jalan Kepayang, 70300 Seremban:szesuenn@tarc.edu.my
+ RSF ( Bachelor in Software Engineering ):21WDE02216:Chan Mei Hui:2002-02-23:016-2461756:179, Jalan Impian, 70100 Seremban.:meihuiii@tarc.edu.my

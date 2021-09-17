@@ -1,0 +1,50 @@
+#!/bin/bash
+
+marks=$1
+
+
+if [ $marks -ge 80 -a $marks -le 100 ]
+then
+   grade="A" 
+   gpa=4.00
+   remarks=" Execellent "
+elif [ $marks -ge 75 -a $marks -le 79 ]
+then 
+   grade="A-"
+   gpa=3.75
+   remarks=" Execellent"
+elif [ $marks -ge 70 -a $marks -le 74 ]
+then
+   grade="B+"
+   gpa=3.50
+   remarks=" Good"
+elif [ $marks -ge 65 -a $marks -le 69 ]
+then
+   grade="B"
+   gpa=3.00
+   remarks=" Good "
+elif [ $marks -ge 60 -a $marks -le 64 ]
+then 
+   grade="B-"
+   gpa=2.75
+   remarks=" Pass "
+elif [ $marks -ge 55 -a $marks -le 59 ]
+then
+   grade="C+"
+   gpa=2.5
+   remarks=" Pass "
+elif [ $marks -ge 50 -a $marks -le 54 ]
+then
+   grade="C"
+   gpa=2.0
+   remarks=" Pass "
+elif [ $marks -ge 0 -a $marks -le 49 ]
+then 
+   grade="F"
+   gpa=0.0
+   remarks=" Failed "
+elif [ $marks -gt 100 -o $marks -lt 0 ]
+then
+  grade=" Invalid Marks Range" 
+fi
+

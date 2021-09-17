@@ -1,0 +1,65 @@
+
+#!/bin/bash
+
+readonly RIT="RIT ( Bachelor in Information Technology )"
+readonly RSD="RSD ( Bachelor in Software Development )"
+readonly RST="RST ( Bachelor in Interactive Software Technology )"
+readonly REI="REI ( Bachelor in Enterprise Information System )"
+readonly RSF="RSF ( Bachelor in Software Engineering )"
+
+
+echo "  Programme Selections Menu"
+echo -e "\e[1;34m =========================== \e[0m" 
+
+
+echo -e "\e[1;32m T \e[0m- RIT ( Bachelor in Information Technology ) " 
+echo -e "\e[1;32m D \e[0m- RSD ( Bachelor in Software Development ) " 
+echo -e "\e[1;32m S \e[0m- RST ( Bachelor in Interactive Software Technology ) " 
+echo -e "\e[1;32m E \e[0m- REI ( Bachelor in Enterprise Information System ) " 
+echo -e "\e[1;32m F \e[0m- RSF ( Bachelor in Software Engineering ) " 
+
+echo -e "\e[1;32m Q \e[0m- Quit ( Return to College Management Menu) " 
+
+echo " "
+
+validInput=false
+while [ $validInput = "false" ]
+do
+echo -n " Please select a choice: "; read choice
+choice=$(echo $choice | tr "[[:lower:]]" "[[:upper:]]" )
+
+ if ! [[ $choice =~ ^[DEFQST]$ ]]
+ then 
+  echo -e "\033[31;5m Invalid Input ! \033[0m" 
+  echo " Please enter agian."
+  validInput=false
+ else
+   validInput=true
+ fi
+done
+
+case $choice in
+ [Tt]) prog="$RIT"
+       ;;
+ [Dd]) prog="$RSD"
+       ;;
+ [Ss]) prog="$RST"
+       ;;
+ [Ee]) prog="$REI"
+       ;;
+ [Ff]) prog="$RSF"
+       ;;
+ [Qq]) echo " Returning to College Management Menu..."
+       sleep 1
+       ./ManagementMenu
+       ;; 
+esac
+
+echo " Programme Selected: $prog "
+echo -e "\033[33;5m User is requested to fill in the Student Details Form. \033[0m"
+ 
+./addStud "$prog"  #1st argument
+
+
+
+

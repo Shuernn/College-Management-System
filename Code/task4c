@@ -1,0 +1,194 @@
+#!/bin/bash
+
+
+# input code, marks
+# Save the result
+
+studID=$1
+year=$2
+sem=$3
+
+course_file="/home/shuern/Downloads/course.txt"
+stud_file="/home/shuern/Downloads/student.txt"
+
+i=0
+sum=0
+loop=y
+while [ $loop = "y" ]
+do
+ 
+# Once error happen, should directly ask user to prompt or ask whether they want to continue?
+
+ #--------------
+ validCode=false
+ while [ $validCode = false ]
+ do
+  echo -n " Please enter the course code: " ; read courseCode
+  
+  courseCode=$(echo $courseCode | tr "[[:lower:]]" "[[:upper:]]" )
+  
+ 
+  if  [ -z $courseCode ] || ! [[ $courseCode =~ ^BA[A-Z][A-Z][0-9][0-9][0-9][0-9]$ ]]
+   then 
+   echo " "
+   echo -e "\033[31;5m Invalid Course Code ! \033[0m"
+   echo " Please enter a valid Course Code."
+   echo " "
+   validCode=false    
+ else
+ 
+ # Check for whether the course code exist
+   if grep -q -w  $courseCode $course_file 
+    then
+      validCode=true
+      
+      #Check duplicate for 1 course
+      if [ -f $studID"Result.txt" ] && grep -q $courseCode $studID"Result.txt"
+      then
+         echo " "
+         echo -e "\e[1;34m Mark is added for $courseCode \e[0m"  
+         echo " "
+         validCode=false
+      else 
+          validCode=true
+          
+       fi
+       
+    else  # Code does not exist 
+     echo " "
+     echo -e "\033[31;5m Course Code does not exist ! \033[0m"
+     echo " User is required to create and add the new course at the Add New Courses Form."
+     echo " "
+     validCode=false 
+     fi   
+ fi     
+
+done
+ 
+ #-----------------------------------------------------
+
+ validMarks=false
+ while [ $validMarks = false ]
+  do 
+   echo -n " Enter the marks obtained: " ; read marks
+
+    
+   if [[ $marks =~ ^[0-9]+$ ]]
+    then 
+      # Run the script file (../ means parents directory)
+      
+      . ./marks "$marks"          
+      
+      if [[ $grade =~ ^[ABCF+-] ]] 
+      then  
+        validMarks=true
+      else 
+       echo " "
+       echo $grade
+       echo -e "\033[31;5m Invalid Marks ! Marks must between 0 to 100. \033[0m"
+       echo " Please enter a valid marks."
+       echo " "
+       validMarks=false
+     fi
+  else
+    echo " "
+    echo -e "\033[31;5m Invalid Marks. \033[0m"
+    echo " Please enter again."
+    echo " "
+    validMarks=false
+    fi
+ done
+ 
+
+#---------------------------------------------------------------
+echo " "
+echo " Saving the student examination marks..."
+sleep 1
+echo " "
+
+
+course_file="/home/shuern/Downloads/course.txt"
+stud_file="/home/shuern/Downloads/student.txt"
+marks_file="/home/shuern/Downloads/course.txt"
+
+# Retrive the credit hours
+courseDetails="$(echo $courseCode | grep -w "$courseCode" $course_file)"
+IFS=: 
+read -r code name credit <<< $courseDetails 
+credit=$(echo $credit)
+
+# Calculate quantity point
+point=`echo $gpa \* $credit | bc`
+
+
+
+     printf '%-18s' " $courseCode" >> $studID"Result.txt"
+     printf '%-22d' " $marks" >> $studID"Result.txt"
+     printf '%-22s' " $grade" >> $studID"Result.txt"
+     printf '%-25s' " $remarks" >>  $studID"Result.txt"
+     printf '%.2f\n' " $point" >> $studID"Result.txt"
+
+total[i]=$point
+
+
+
+echo "-------------------------------------"
+
+#-----------------------------------------------------
+
+validChoice=false
+while [ $validChoice = "false" ]
+ do
+  echo " "
+  echo -n " Press (y) to continue to enter the student's marks or (b) to back previous or (q) back to Management Menu: " ; read choice 
+  
+  if ! [[ "$choice" =~ ^[YyBbQq]$ ]]
+   then 
+     echo " "
+     echo -e "\033[31;5m Invalid Input ! \033[0m"
+     echo " "
+     validChoice=false
+   else
+     validChoice=true
+   fi
+    
+   
+ done
+ 
+ echo " "
+ echo " "
+
+ 
+ case $choice in
+ [Yy]) loop=y
+       i=`expr $i + 1`
+       ;;
+ [Bb])for (( x=0; x<=$i; x++ ))
+      do
+       sum=`echo $sum + "${total[x]}" | bc`
+      done  
+      printf '%64s%-23s' " " "Total Quality Point:"  >> $studID"Result.txt"
+      printf '%.2f\n' $sum >> $studID"Result.txt"
+      echo " " >> $studID"Result.txt"
+      echo " Back to Student Validation Form..."
+      sleep 1
+      echo " "
+      ./studV
+      exit
+      ;;
+ [Qq])for (( x=0; x<=$i; x++ ))
+      do
+       sum=`echo $sum + "${total[x]}" | bc`
+      done  
+      printf '%64s%-23s' " " "Total Quality Point:"  >> $studID"Result.txt"
+      printf '%.2f\n' $sum >> $studID"Result.txt"
+      echo " " >> $studID"Result.txt"
+      echo " Back to Management Menu..."
+      sleep 1
+      ./ManagementMenu
+      exit
+      ;;
+ esac
+
+done
+

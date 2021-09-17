@@ -1,0 +1,77 @@
+
+#!/bin/bash
+
+
+if ! [ -f $course.txt ]
+then touch course.txt
+fi
+
+if ! [ -f $student.txt ]
+then touch student.txt
+fi
+
+echo " "
+echo "  College Management Menu"
+echo -e "\e[1;34m ========================= \e[0m"  #blue text
+echo -e "\e[1;32m 1 \e[0m- Add New Students " #Green
+echo -e "\e[1;32m 2 \e[0m- Add New Courses " 
+echo -e "\e[1;32m 3 \e[0m- Grade Students " 
+echo -e "\e[1;32m 4 \e[0m- Search Student Details " 
+echo -e "\e[1;32m 5 \e[0m- Search Course Details " 
+echo " "
+echo -e "\e[1;32m Q \e[0m- Quit (Exit from program) " 
+echo " "
+
+validChoice=false
+while [ $validChoice = "false" ]
+do
+ echo -n " Please select a choice: "; read choice
+ if ! [[ $choice =~ ^[Qq1-5]$ ]]
+  then 
+    echo -e "\033[31;5m Invalid Input ! \033[0m" #blink red text
+    echo " Please enter again." 
+    echo " "
+    validChoice=false
+ else
+    validChoice=true
+  fi
+done
+ 
+ case $choice in
+  1) echo " Displaying Programme Selections Menu..."
+     sleep 2
+     echo " "
+    ./prog
+    ;;
+  
+  2) echo " Displaying Add New Courses Form..."
+     sleep 2
+     echo " "
+     ./addCourse
+     ;;
+   
+  3) echo " Displaying Student Validation Form..."
+     sleep 2
+     echo " "
+     ./studV
+     ;;
+   
+  4) echo " Displaying Search Student Details Form..."
+     sleep 2
+     echo " "
+     ./searchStud
+     ;;
+
+  5) echo " Displaying Search Course Details Form..."
+     sleep 2
+     echo " "
+     ./searchCourse
+     ;;
+
+  [Qq]) echo " Closing the program..."
+        sleep 2
+        echo -e "\e[1;33m Bye Bye ! \e[0m" #yellow
+        exit
+        ;;
+ esac
+

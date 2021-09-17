@@ -1,0 +1,13 @@
+ Student ID      :  20WRR05429       
+ Student Name    :  Yensan Pang      
+ Academic Year   :  2021             
+ Semester        :  2                
+ 
+ ======================================================================================================
+ Course Code:     Marks Obtained:        Grade Obtained:        Remarks:               Quality Point:        
+ =====================================================================================================
+ BACS1234         70                     B+                     Good                   14.00
+ BAIT2112         90                     A                      Execellent             8.00
+ BAIT3113         40                     F                      Failed                 0.00
+                                                                Total Quality Point:   22.00
+ 

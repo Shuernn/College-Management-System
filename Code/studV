@@ -1,0 +1,91 @@
+#!/bin/bash
+
+stud_file="/home/shuern/Downloads/student.txt"
+
+# echo -e "\033[4mSearch Student Details Form\033[0m"
+echo "  Student Validation Form"
+echo -e "\e[1;36m -------------------------- \e[0m" 
+
+ validCode=f
+ while [ $validCode = "f" ]
+  do
+   echo -n " Enter Student ID [00XXX00000]: "; read studID
+   echo " "
+
+   
+   studID=${studID^^} #Change to uppercase
+   studID=$(echo $studID | tr -d '[[:space:]]' )
+   
+   # Check format whether the user has input a value and the format of the input value   
+   if [ -n $studID ] && [[ $studID =~ ^[0-9][0-9][A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9][0-9]$ ]]
+	then
+	
+	# Store the result into a variable
+  	result="$(echo $studID | grep -i "$studID" "$stud_file")"
+  	
+  	# Get value from the above variable
+  	while IFS=: read -r programme id name date contact mailAdd email   
+  	do
+         if [[ -n $programme ]]  
+          then
+            validCode=t
+	     echo " --------------------------------------------------------------------"
+	     echo " "             
+            
+            
+            printf '%-15s%-3s%-17s\n' " Student Name " ":" "$name"
+            printf '%-15s%-2s%-s\n' " Programme " ":" "$programme"
+            
+            echo " "              
+         
+            echo " --------------------------------------------------------------------"
+               
+         else
+           echo " "
+           echo -e "\033[31;5m This Student ID does not exist ! \033[0m"
+           echo " Please enter again."
+           echo " "
+           validCode=f
+         fi
+        done <<< $result 
+  else
+    echo " "  
+    echo -e "\033[31;5m Invalid Student ID ! \033[0m"
+    echo " Please enter again."
+    echo " "
+    validCode=f
+  fi
+done
+
+
+validChoice=false
+while [[ $validChoice = "false" ]]
+do
+ echo " "
+ echo " Press (n) to continue to enter the student’s marks: "
+ echo -n " (q) to return to College Management Menu:"; read choice 
+ 
+ if ! [[ $choice =~ ^[NnQq]$ ]]
+  then
+    echo " "
+    echo -e "\033[31;5m Invalid Input ! \033[0m"
+    echo " Please enter again."
+    echo " "
+    validChoice=false
+  else
+    validChoice=true    
+ fi
+ done
+
+echo " "
+
+
+
+case $choice in
+[Nn]) ./task4b "$studID" 
+      ;;
+[Qq]) ./ManagementMenu
+      ;;
+esac
+
+

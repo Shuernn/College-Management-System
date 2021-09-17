@@ -1,0 +1,154 @@
+
+#!/bin/bash
+
+
+
+
+course_file=/home/shuern/Downloads/course.txt
+
+echo " Add new Course Form"
+echo " ==================="
+echo " "
+
+#-------------------------------------------------------
+# Search avoid duplicate course number
+
+course_file="/home/shuern/Downloads/course.txt"
+
+validCode=f #false
+while [ $validCode = "f" ]
+ do
+  echo -n " Course Code [BAxx0000]: " ; read courseCode 
+  courseCode=${courseCode^^} #Change to uppercase
+
+# The input need to be in format such as begin with BA
+
+  if [ -n $courseCode ] && [[ $courseCode =~ ^BA[A-Z][A-Z][0-9][0-9][0-9][0-9]$ ]]
+  then  
+    # Check for duplicate # q - no output
+    if grep -q  $courseCode $course_file 
+    then
+      echo " "    
+      echo -e "\033[31;5m The course code already exist ! \033[0m"
+      echo " Please enter a new course code."
+      echo " ------------------------------"
+      validCode=f
+    else 
+      validCode=t       
+    fi
+  else
+    echo " "  
+    echo -e "\033[31;5m Invalid Course Code. \033[0m"
+    echo " Please enter again. (BA[SS1234])"
+    echo " "
+    validCode=f
+  fi
+done
+ 
+#------------------------------------------------------------
+# Check for null string 
+
+validName=f
+ while [ $validName = "f" ] 
+ do
+  echo -n " Course Name: " ; read courseName 
+  name=$(echo $courseName | tr -d '[[:space:]]' )
+  
+  if [ -z $name ]
+  then
+    echo " "
+    echo -e "\033[31;5m Empty input ! \033[0m"
+    echo " Please enter valid input."
+    echo " "
+    validName=f
+  else 
+    validName=t
+    courseName=$(echo $courseName | tr -s " " | tr [[:upper:]] [[:lower:]] ) #Remove extra space
+
+    courseName=($courseName)
+    courseName="${courseName[@]^}"
+
+# Variable stored tha input course name and the space between had been removed
+# name=$(echo $courseName | tr -d '[[:space:]]' )
+  
+   if [[ $name =~ [A-Za-z\-]{10,} ]]
+    then 
+     # Check duplicate name # Igonre the space in course.txt and also input
+     if cat $course_file | tr -d '[[:space:]]' | grep -i -q -w $name
+      then
+        echo " "
+        echo -e "\033[31;5m Duplicate Course Name ! \033[0m"      
+        echo " Please enter a new Course Name."
+        echo " "
+        validName=f
+     fi
+   else
+     echo " "
+     echo -e "\033[31;5m Invalid Course Name. (Min length: 10 words) \033[0m"  
+     echo " Please enter a valid Course Name"  
+     echo " "
+     validName=f
+   fi
+   
+  fi  
+
+ done
+ 
+ #---------------------------------------------------------
+ validHours=f
+# Check for valid input number
+ while [ $validHours = "f" ] # if credit hours = string
+ do
+  echo -n " Credit Hours(1-12): " ; read creditHours
+   if [[ $creditHours =~ ^[0-9]+$ ]] # Check is integer or not
+    then # integer
+     if [ $creditHours -ge 1 -a $creditHours -le 12 ]
+       then 
+         validHours=t
+     else # for the credit hours that are not in range
+       echo " " 
+        echo -e "\033[31;5m Invalid Credit Hours. Must be in between 1 to 12. \033[0m"       
+       echo " Please enter again."
+       echo " "
+       validHours=f
+     fi
+   else # if the credit hours is string
+     echo " "   
+     echo -e "\033[31;5m Input must be integer. \033[0m"       
+     echo " Please type again"
+     echo " "     
+     validHours=f
+   fi
+ done
+
+ echo " "
+ echo " Saving ......" 
+ sleep 3
+ echo "$courseCode:$courseName:$creditHours" >> course.txt
+ echo " "
+    
+ # To check whether input a valid letter (y and q)
+validRespond=false
+while [ $validRespond = "false" ]
+do
+ echo " Add Another Course? (y)es or (q)uit: "    
+ echo -n " Press (q) to return to College Management Menu "  ; read respond
+  
+ if ! [[ $respond =~ ^[Y|y|Q|q]$ ]]
+  then
+    echo " "  
+    echo -e "\033[31;5m Invalid Input. \033[0m" 
+    echo " Please enter again [y]yes/[q]quit"
+    echo " "
+    validRespond=false
+  else
+    validRespond=true
+ fi
+done 
+
+case $respond in
+[Qq])./ManagementMenu
+     ;;
+[Yy])./addCourse
+     ;;
+esac

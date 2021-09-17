@@ -1,0 +1,11 @@
+ Student ID      :  19WMR05920       
+ Student Name    :  Hee Sze Wei      
+ Academic Year   :  2020             
+ Semester        :  1                
+ 
+ ======================================================================================================
+ Course Code:     Marks Obtained:        Grade Obtained:        Remarks:               Quality Point:        
+ =====================================================================================================
+ BACS1234         70                     B+                     Good                   14.00
+                                                                Total Quality Point:   14.00
+ 
